@@ -1,0 +1,25 @@
+fileFormatVersion: 2
+guid: fd766c5483ac4494ba8bbaea579c0aa1
+timeCreated: 1524574948
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: 210 Appgulim
+  fontNames:
+  - 210 Appgulim
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: c88880f9472a1aa4aa28528b0c80d575, type: 3}
+  - {fileID: 12800000, guid: 49aa042d89c5926468d98a4de1656ae2, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
