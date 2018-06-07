@@ -9,8 +9,6 @@ public class PlayerScript : MonoBehaviour {
 
     private Vector3 dir;
 
-    public GameObject ps;
-
     private bool isDead;
 
     public GameObject resetBtn;
@@ -34,6 +32,8 @@ public class PlayerScript : MonoBehaviour {
     public Transform contactPoint;
 
     public bool scoreImpact;
+
+    public GameObject ps;
 
     public GameObject vCamera;
 	// Use this for initialization

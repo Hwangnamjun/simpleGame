@@ -10,20 +10,27 @@ public class LineScript : MonoBehaviour {
 
     public GameObject WirePlayer;
 
+    public GameObject[] countLine;
+
+    public bool lineSETup = false;
+
     // Use this for initialization
     void Start ()
     {
-        sizeUP = 0.01f;
-
-
+        if (lineSETup == true)
+        {
+            sizeUP = 0.01f;
+        }
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        countLine = GameObject.FindGameObjectsWithTag("Line");
+
         WirePlayer = GameObject.FindGameObjectWithTag("Player");
 
-        this.gameObject.transform.localScale += new Vector3(0, 0,sizeUP);
+        this.gameObject.transform.localScale += new Vector3(0, 0, sizeUP);
 
         if (this.gameObject.GetComponent<HingeJoint>() == null)
         {
@@ -52,9 +59,8 @@ public class LineScript : MonoBehaviour {
             this.GetComponent<HingeJoint>().connectedBody = other.GetComponent<Rigidbody>();
         }
     }
-
-    public void OnTriggerExit(Collider other)
+    public void abc()
     {
-        //_obj = null;
+        lineSETup = true;
     }
 }

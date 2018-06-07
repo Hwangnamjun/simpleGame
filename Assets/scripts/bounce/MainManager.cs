@@ -54,6 +54,10 @@ public class MainManager : MonoBehaviour {
     {
         SceneManager.LoadScene("bunce");
     }
+    public void clickWire()
+    {
+        SceneManager.LoadScene("wire");
+    }
     public void clickExit()
     {
         if (!Application.isEditor)
