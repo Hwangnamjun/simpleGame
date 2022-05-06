@@ -15,9 +15,10 @@ public class StartManager : MonoBehaviour {
     public GameObject Player;
     public GameObject vCam2;
     public GameObject dollyCart;
-
+    public GameObject Pauseui;
     private void Awake()
     {
+        Pauseui.SetActive(false);
         vCam2.SetActive(true);
         Player.SetActive(false);
         NowHowAnim = Konw.GetComponent<Animator>();
@@ -35,7 +36,12 @@ public class StartManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseClick();
+        }
     }
 
     public void TimingIsNow()
@@ -45,6 +51,20 @@ public class StartManager : MonoBehaviour {
         MainName.SetActive(false);
         Player.SetActive(true);
         dollyCart.SetActive(false);
+    }
+    public void PauseClick()
+    {
+        Time.timeScale = 0;
+        GameObject.Find("Player").GetComponent<PlayerScript>().enabled = false;
+        KH_back.SetActive(true);
+        Pauseui.SetActive(true);
+    }
+    public void PauseNonClick()
+    {
+        KH_back.SetActive(false);
+        Pauseui.SetActive(false);
+        Time.timeScale = 1;
+        GameObject.Find("Player").GetComponent<PlayerScript>().enabled = true;
     }
     public void KonwHow_Click()
     {
@@ -56,8 +76,10 @@ public class StartManager : MonoBehaviour {
         KH_back.SetActive(false);
         NowHowAnim.SetTrigger("Bye");
     }
-    public void BunceExit()
+    public void bounceExit()
     {
-        SceneManager.LoadScene("mainTitle");
+        Time.timeScale = 1;
+        SceneManager.LoadScene("mainTitle"); 
     }
+
 }

@@ -4,120 +4,141 @@ using UnityEngine;
 
 public class wirePlant : MonoBehaviour
 {
-    public GameObject[] CeilingPrefabs;
-
-    public GameObject currentCeiling;
-
     public GameObject pickup;
+    public GameObject Item;
+    public GameObject currentCeiling;
 
     public bool setStart;
 
     public GameObject[] bonusPos;
+    public List<GameObject> bonuscheck = new List<GameObject>();
+    public List<GameObject> itemcheck = new List<GameObject>();
+    public List<GameObject> plantcheck = new List<GameObject>();
 
-    private static wirePlant instance;
+    private float sizeX;
+    private float sizeY;
 
-    private Stack<GameObject> okCeiling = new Stack<GameObject>();
+    public GameObject platformX;
+    public GameObject platformY;
 
-    public Stack<GameObject> OkCeiling
-    {
-        get { return okCeiling; }
-        set { okCeiling = value; }
-    }
+    Vector3 lastPos;
 
-    private Stack<GameObject> nonCeiling = new Stack<GameObject>();
-
-    public Stack<GameObject> NonCeiling
-    {
-        get { return nonCeiling; }
-        set { nonCeiling = value; }
-    }
-
-    public static wirePlant Instance
-    {
-        get
-        {
-            if (instance == null)
-            {
-                instance = GameObject.FindObjectOfType<wirePlant>();
-            }
-            return instance;
-        }
-    }
+    public float pickupcount;
+    public float Itemcount;
+    public float plantcount;
 
     void Start()
     {
         setStart = false;
-    }
-    public void startWire()
-    {
-        CreateCeiling(10);
-
-        for (int i = 0; i < 5; i++)
+        sizeX = platformX.transform.localScale.x;
+        sizeY = platformY.transform.localScale.x + 5f;
+        lastPos = currentCeiling.transform.position;
+        for (int x = 0; x < 10; x++)
         {
-            SpawnCeiling();
+           int ransomware = Random.Range(0, 2);
+            if(ransomware == 0)
+            {
+                okCeiling();
+            }
+            else if(ransomware == 1)
+            {
+                nonCeiling();
+            }
         }
+        InvokeRepeating("SpawnPlatform", 2f, 2f);
     }
+
     void Update()
     {
         if(setStart == true)
         {
-            int spawnPickup = Random.Range(0, 300); if (spawnPickup == 0)
-            {
-                int PickupPos = Random.Range(1, 4);
+            int spawnPickup = Random.Range(0, 300);
+            int spawnItem = Random.Range(0, 300);
 
-                if (PickupPos == 1)
+            if (pickupcount < 5)
+            {
+                if (spawnPickup == 0)
                 {
-                    Instantiate(pickup, bonusPos[0].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                    int PickupPos = Random.Range(1, 4);
+
+                    if (PickupPos == 1)
+                    {
+                        Instantiate(pickup, bonusPos[0].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                        bonuscheck.Add(pickup);
+                        pickupcount++;
+                    }
+                    if (PickupPos == 2)
+                    {
+                        Instantiate(pickup, bonusPos[1].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                        bonuscheck.Add(pickup);
+                        pickupcount++;
+                    }
+                    if (PickupPos == 3)
+                    {
+                        Instantiate(pickup, bonusPos[2].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                        bonuscheck.Add(pickup);
+                        pickupcount++;
+                    }
                 }
-                if (PickupPos == 2)
+            }
+            if(Itemcount < 1)
+            {
+                if(spawnItem == 0)
                 {
-                    Instantiate(pickup, bonusPos[1].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
-                }
-                if (PickupPos == 3)
-                {
-                    Instantiate(pickup, bonusPos[2].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                    int PickupPos = Random.Range(1, 4);
+
+                    if (PickupPos == 1)
+                    {
+                        Instantiate(Item, bonusPos[0].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                        itemcheck.Add(Item);
+                        Itemcount++;
+                    }
+                    if (PickupPos == 2)
+                    {
+                        Instantiate(Item, bonusPos[1].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                        itemcheck.Add(Item);
+                        Itemcount++;
+                    }
+                    if (PickupPos == 3)
+                    {
+                        Instantiate(Item, bonusPos[2].transform.position, Quaternion.Euler(-56.8f, 62.42f, -131.9f));
+                        itemcheck.Add(Item);
+                        Itemcount++;
+                    }
                 }
             }
         }
-
     }
-
-    public void CreateCeiling(int amount)
+    private void SpawnPlatform()
     {
-        for (int i = 0; i < amount; i++)
+        int random = Random.Range(0, 6);
+        if(plantcount < 15)
         {
-            okCeiling.Push(Instantiate(CeilingPrefabs[0]));
-            nonCeiling.Push(Instantiate(CeilingPrefabs[1]));
-            nonCeiling.Peek().SetActive(false);
-            okCeiling.Peek().SetActive(false);
-            nonCeiling.Peek().name = "NonCeiling";
-            okCeiling.Peek().name = "OkCeiling";
+            if (random < 3)
+            {
+                okCeiling();
+            }
+            if (random >= 3)
+            {
+                nonCeiling();
+            }
         }
     }
-
-    public void SpawnCeiling()
+    private void okCeiling()
     {
-        if (okCeiling.Count == 0|| nonCeiling.Count == 0)
-        {
-            CreateCeiling(10);
-        }
-
-        int randomIndex = Random.Range(0, 2);
-
-        if (randomIndex == 0)
-        {
-            GameObject tmp = okCeiling.Pop();
-            tmp.SetActive(true);
-            tmp.transform.position = currentCeiling.transform.GetChild(0).transform.GetChild(0).position;
-            currentCeiling = tmp;
-        }
-        else if(randomIndex == 1)
-        {
-            GameObject tmp = nonCeiling.Pop();
-            tmp.SetActive(true);
-            tmp.transform.position = currentCeiling.transform.GetChild(0).transform.GetChild(0).position;
-            currentCeiling = tmp;
-        }
+        GameObject _platform = Instantiate(platformX) as GameObject;
+        _platform.transform.position = lastPos + new Vector3(sizeX, 0, 0);
+        lastPos = _platform.transform.position;
+        plantcheck.Add(platformX);
+        plantcount++;
+    }
+    private void nonCeiling()
+    {
+        GameObject _platform = Instantiate(platformY) as GameObject;
+        _platform.transform.position = lastPos + new Vector3(sizeY, 0, 0);
+        lastPos = _platform.transform.position;
+        plantcheck.Add(platformY);
+        plantcount++;
     }
     public void triggerStart()
     {

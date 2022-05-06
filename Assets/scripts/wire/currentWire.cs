@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class currentWire : MonoBehaviour {
 
+    public wirePlant plantcount;
     // Use this for initialization
     void Start()
     {
-
+        plantcount = GameObject.Find("WirePlant").GetComponent<wirePlant>();
     }
 
     // Update is called once per frame
@@ -15,51 +16,16 @@ public class currentWire : MonoBehaviour {
     {
 
     }
-
-    void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "current")
+        if (other.gameObject.tag == "current")
         {
-            wirePlant.Instance.SpawnCeiling();
-            StartCoroutine(Falling());
-            //destroyBlock();
+            Invoke("FallDown", 1f);
         }
     }
-
-    //public void destroyBlock()
-    //{
-    //    if (gameObject.name == "okCeiling")
-    //    {
-    //        wirePlant.Instance.OkCeiling.Push(gameObject);
-    //        gameObject.SetActive(false);
-    //        Debug.Log("123");
-    //    }
-    //    else if (gameObject.name == "nonCeiling")
-    //    {
-    //        wirePlant.Instance.NonCeiling.Push(gameObject);
-    //        gameObject.SetActive(false);
-    //        Debug.Log("123");
-    //    }
-    //}
-    IEnumerator Falling()
+    private void FallDown()
     {
-        yield return new WaitForSeconds(2);
-
-        switch (gameObject.name)
-
-        {
-            case "OkCeiling":
-                wirePlant.Instance.OkCeiling.Push(gameObject);
-                gameObject.GetComponent<Rigidbody>().isKinematic = true;
-                gameObject.SetActive(false);
-                break;
-
-            case "NonCeiling":
-                wirePlant.Instance.NonCeiling.Push(gameObject);
-                gameObject.GetComponent<Rigidbody>().isKinematic = true;
-                gameObject.SetActive(false);
-                break;
-        }
+        Destroy(this.transform.parent.gameObject, 2f);
+        plantcount.plantcount += -1;
     }
-
 }

@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class TileScript : MonoBehaviour {
 
-    private float fallDealy = 1.5f;
-	// Use this for initialization
-	void Start () {
-		
-	}
+    private float fallDealy = 1f;
+
+    // Use this for initialization
+    void Start () {
+
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -42,6 +43,17 @@ public class TileScript : MonoBehaviour {
 
             case "TopTile":
                 TileManager.Instance.TopTiles.Push(gameObject);
+                gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                gameObject.SetActive(false);
+                break;
+            case "LeftJumpTile":
+                TileManager.Instance.LeftJumpTiles.Push(gameObject);
+                gameObject.GetComponent<Rigidbody>().isKinematic = true;
+                gameObject.SetActive(false);
+                break;
+
+            case "TopJumpTile":
+                TileManager.Instance.TopJumpTiles.Push(gameObject);
                 gameObject.GetComponent<Rigidbody>().isKinematic = true;
                 gameObject.SetActive(false);
                 break;

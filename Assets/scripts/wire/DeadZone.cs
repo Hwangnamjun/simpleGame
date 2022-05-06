@@ -12,7 +12,13 @@ public class DeadZone : MonoBehaviour {
     public bool check = false;
     public bool sizecheck = false;
     public bool playerZone;
+    public bool pickItem = false;
+    private float timeCheck;
     public float PlayerX;
+    private float countlife;
+    private bool countzone = false;
+    public GameObject waterwave;
+    public GameObject wavepoint;
     // Use this for initialization
     void Start ()
     {
@@ -23,6 +29,7 @@ public class DeadZone : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        waterwave.transform.position = wavepoint.transform.position;
         if (check == false)
         {
             Timer += Time.deltaTime;
@@ -32,24 +39,43 @@ public class DeadZone : MonoBehaviour {
             this.transform.position = new Vector3(PlayerWire.transform.position.x, -6f, 0);
         }
 
-        this.transform.localScale = new Vector3(28, Zonesize, 5);
-
-        if (Zonesize < 6)
+        //this.transform.localScale = new Vector3(28, Zonesize, 5);
+        this.transform.localScale = new Vector3(50, Zonesize, 25);
+        if(pickItem == false)
         {
-            sizecheck = false;
-            Zonesize = 6f;
+            if (Zonesize < 6)
+            {
+                sizecheck = false;
+                Zonesize = 6f;
+            }
+            if (playerZone == false)
+            {
+                PlayerX = PlayerWire.transform.position.x;
+            }
+            else if (playerZone == true)
+            {
+                PlayerX = Cam.transform.position.x;
+            }
+            if (countzone == true)
+            {
+                countlife += Time.deltaTime;
+                if (countlife >= 5)
+                {
+                    PlayerWire.GetComponent<Rigidbody>().isKinematic = true;
+                    countlife = 0;
+                    countzone = false;
+                }
+            }
+            Lookrandom();
+            randomScale();
+            sizeUpDown();
         }
-        if(playerZone == false)
+        else
         {
-            PlayerX = PlayerWire.transform.position.x;
+            check = true;
+            Timer = 0;
+            eatitem();
         }
-        else if(playerZone == true)
-        {
-            PlayerX = Cam.transform.position.x;
-        }
-        Lookrandom();
-        randomScale();
-        sizeUpDown();
     }
 
     public void Lookrandom()
@@ -85,11 +111,30 @@ public class DeadZone : MonoBehaviour {
             Zonesize -= 3f * Time.deltaTime;
         }
     }
+    public void eatitem()
+    {
+        if(Zonesize > 6)
+        {
+            Zonesize -= 7f * Time.deltaTime;
+        }
+        if (Zonesize < 6)
+        {
+            sizecheck = false;
+            Zonesize = 6f;
+        }
+        timeCheck += Time.deltaTime;
+        if(timeCheck > 5)
+        {
+            pickItem = false;
+            check = false;
+        }
+    }
     public void OnTriggerEnter(Collider other)
     {
         if(other.tag == "Player")
         {
             playerZone = true;
+            countzone = true;
         }
     }
 }

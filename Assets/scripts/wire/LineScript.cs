@@ -14,12 +14,13 @@ public class LineScript : MonoBehaviour {
 
     public bool lineSETup = false;
 
+    wirePlayer wireplayer;
     // Use this for initialization
     void Start ()
     {
         if (lineSETup == true)
         {
-            sizeUP = 0.01f;
+            sizeUP = 0.5f;
         }
     }
 	
@@ -30,7 +31,7 @@ public class LineScript : MonoBehaviour {
 
         WirePlayer = GameObject.FindGameObjectWithTag("Player");
 
-        this.gameObject.transform.localScale += new Vector3(0, 0, sizeUP);
+        this.gameObject.transform.localScale += new Vector3(0, 0, sizeUP * Time.deltaTime);
 
         if (this.gameObject.GetComponent<HingeJoint>() == null)
         {
@@ -57,6 +58,15 @@ public class LineScript : MonoBehaviour {
             _obj = other.gameObject;
             this.gameObject.GetComponent<HingeJoint>().anchor = new Vector3(0, -0.67f, 59.04f);
             this.GetComponent<HingeJoint>().connectedBody = other.GetComponent<Rigidbody>();
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "none")
+        {
+            wireplayer = WirePlayer.GetComponent<wirePlayer>();
+
+            wireplayer.none();
         }
     }
     public void abc()

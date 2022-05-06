@@ -13,17 +13,22 @@ public class wirePlayer : MonoBehaviour {
     private int wirescore = 0;
     public Text scoreText;
     public Text[] wirescoreTexts;
-    public GameObject ps;
+    public GameObject PickupPs;
+    public GameObject ItemPs;
     public bool isLive = true;
     public GameObject Vcamera;
     public Animator gameOverAnim;
     public Text wireHighScore;
     public Image backGround;
     public GameObject current;
+    public wirePlant wirecount;
+    public DeadZone deadzone;
+    public GameObject dead;
+    public AudioClip[] eventclip;
     // Use this for initialization
     void Start ()
-
     {
+        deadzone = dead.GetComponent<DeadZone>();
         clickNum = 0;
         isLive = true;
         Vcamera.SetActive(true);
@@ -46,6 +51,8 @@ public class wirePlayer : MonoBehaviour {
     {
         if (Input.GetMouseButtonDown(0))
         {
+            this.GetComponent<AudioSource>().clip = eventclip[0];
+            this.GetComponent<AudioSource>().Play();
             clickNum++;
         }
         if (clickNum == 0)
@@ -92,14 +99,25 @@ public class wirePlayer : MonoBehaviour {
     {
         if (other.tag == "Pickup")
         {
-            other.gameObject.SetActive(false);
+            Destroy(other.gameObject);
+            wirecount.pickupcount += -1f;
             wirescore += 3;
             scoreText.text = wirescore.ToString();
-            Instantiate(ps, transform.position, Quaternion.identity);
+            Instantiate(PickupPs, transform.position, Quaternion.identity);
             CombatTextManager.Instance.CreateText(other.transform.position, "+3", new Color32(255, 38, 38, 255), true);
+        }
+        if(other.tag == "Item")
+        {
+            Destroy(other.gameObject);
+            deadzone.pickItem = true;
+            wirecount.Itemcount += -1f;
+            Instantiate(ItemPs, transform.position, Quaternion.identity);
         }
         if(other.tag == "DeadZone")
         {
+            this.GetComponent<AudioSource>().clip = eventclip[1];
+            this.GetComponent<AudioSource>().Play();
+
             current.SetActive(false);
             isLive = false;
             Vcamera.SetActive(false);
@@ -127,7 +145,7 @@ public class wirePlayer : MonoBehaviour {
 
         if (wirescore > bestWire)
         {
-            PlayerPrefs.SetInt("BestScore", wirescore);
+            PlayerPrefs.SetInt("Bestwire", wirescore);
             wireHighScore.gameObject.SetActive(true);
             backGround.color = new Color32(255, 255, 154, 255);
             foreach (Text txt in wirescoreTexts)
@@ -135,6 +153,12 @@ public class wirePlayer : MonoBehaviour {
                 txt.color = Color.black;
             }
         }
-        wirescoreTexts[3].text = PlayerPrefs.GetInt("BestScore", 0).ToString();
+        wirescoreTexts[3].text = PlayerPrefs.GetInt("Bestwire", 0).ToString();
+    }
+    public void none()
+    {
+        Destroy(countLine[0]);
+        clickCheck = false;
+        clickNum++;
     }
 }
